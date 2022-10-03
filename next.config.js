@@ -1,3 +1,4 @@
+process.title = 'Umami (NextJS)';
 require('dotenv').config();
 const pkg = require('./package.json');
 
@@ -65,6 +66,8 @@ module.exports = {
         source: '/telemetry.js',
         destination: '/api/scripts/telemetry',
       },
+      { source: '/hash/:tracker(.*?\\.js)', destination: '/hash/umami.js' },
+      { source: '/:tracker(.*?\\.js)', destination: '/umami.js' },
     ];
   },
 };

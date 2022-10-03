@@ -18,7 +18,8 @@
     "start-env": "node scripts/start-env.js",
     "start-server": "node server.js",
     "build-app": "next build",
-    "build-tracker": "rollup -c rollup.tracker.config.js",
+
+    "build-tracker": "rollup -c rollup.tracker.config.js && node scripts/hash-umami.js",
     "build-db": "npm-run-all copy-db-files build-db-client",
     "build-lang": "npm-run-all format-lang compile-lang download-country-names download-language-names",
     "build-geo": "node scripts/build-geo.js",

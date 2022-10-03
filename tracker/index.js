@@ -6,6 +6,7 @@
     localStorage,
     document,
     history,
+    umamiEndpoint = 'collect',
   } = window;
   const { hostname, pathname, search } = location;
   const { currentScript } = document;
@@ -29,23 +30,23 @@
     };
   };
 
-  const doNotTrack = () => {
-    const { doNotTrack, navigator, external } = window;
+  // const doNotTrack = () => {
+  //   const { doNotTrack, navigator, external } = window;
+  //
+  //   const msTrackProtection = 'msTrackingProtectionEnabled';
+  //   const msTracking = () => {
+  //     return external && msTrackProtection in external && external[msTrackProtection]();
+  //   };
+  //
+  //   const dnt = doNotTrack || navigator.doNotTrack || navigator.msDoNotTrack || msTracking();
+  //
+  //   return dnt == '1' || dnt === 'yes';
+  // };
 
-    const msTrackProtection = 'msTrackingProtectionEnabled';
-    const msTracking = () => {
-      return external && msTrackProtection in external && external[msTrackProtection]();
-    };
-
-    const dnt = doNotTrack || navigator.doNotTrack || navigator.msDoNotTrack || msTracking();
-
-    return dnt == '1' || dnt === 'yes';
-  };
-
-  const trackingDisabled = () =>
-    (localStorage && localStorage.getItem('umami.disabled')) ||
-    (dnt && doNotTrack()) ||
-    (domain && !domains.includes(hostname));
+  const trackingDisabled = () => false;
+  // (localStorage && localStorage.getItem('umami.disabled')) ||
+  // (dnt && doNotTrack()) ||
+  // (domain && !domains.includes(hostname));
 
   const _data = 'data-';
   const _false = 'false';
@@ -53,14 +54,19 @@
   const website = attr(_data + 'website-id');
   const hostUrl = attr(_data + 'host-url');
   const autoTrack = attr(_data + 'auto-track') !== _false;
-  const dnt = attr(_data + 'do-not-track');
+  // const dnt = attr(_data + 'do-not-track');
   const cssEvents = attr(_data + 'css-events') !== _false;
-  const domain = attr(_data + 'domains') || '';
-  const domains = domain.split(',').map(n => n.trim());
+  // const domain = attr(_data + 'domains') || '';
+  // const domains = domain.split(',').map(n => n.trim());
   const root = hostUrl
     ? hostUrl.replace(/\/$/, '')
     : currentScript.src.split('/').slice(0, -1).join('/');
-  const endpoint = `${root}/api/collect`;
+
+  let endpoint = attr('data-endpoint') || umamiEndpoint;
+  if (endpoint !== 'collect') {
+    endpoint = `tr/` + endpoint;
+  }
+  endpoint = `${root}/api/${endpoint}`;
   const screen = `${width}x${height}`;
   const eventClass = /^umami--([a-z]+)--([\w]+[\w-]*)$/;
   const eventSelect = "[class*='umami--']";
